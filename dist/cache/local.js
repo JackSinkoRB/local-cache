@@ -50,14 +50,11 @@ async function getLocalCacheEntry(keys, compressionMethod) {
 exports.getLocalCacheEntry = getLocalCacheEntry;
 // eslint-disable-next-line max-len
 async function getLocalArchiveFolder(key, findKey = false) {
-    const { GITHUB_REPOSITORY, RUNNER_TOOL_CACHE } = process.env;
-    if (!RUNNER_TOOL_CACHE) {
-        throw new TypeError('Expected RUNNER_TOOL_CACHE environment variable to be defined.');
-    }
+    const { GITHUB_REPOSITORY } = process.env;
     if (!GITHUB_REPOSITORY) {
         throw new TypeError('Expected GITHUB_REPOSITORY environment variable to be defined.');
     }
-    const cachePath = path.join(RUNNER_TOOL_CACHE, GITHUB_REPOSITORY);
+    const cachePath = path.join('/root/shared-cache', GITHUB_REPOSITORY);
     const primaryCacheKey = path.join(cachePath, key);
     if (!findKey || await (0, io_util_1.exists)(primaryCacheKey))
         return primaryCacheKey;

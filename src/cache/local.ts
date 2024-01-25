@@ -39,15 +39,12 @@ export async function getLocalArchiveFolder(key: string): Promise<string>
 export async function getLocalArchiveFolder(key: string, findKey?: boolean): Promise<string | undefined>
 // eslint-disable-next-line max-len
 export async function getLocalArchiveFolder(key: string, findKey = false): Promise<string | undefined> {
-  const { GITHUB_REPOSITORY, RUNNER_TOOL_CACHE } = process.env
-  if (!RUNNER_TOOL_CACHE) {
-    throw new TypeError('Expected RUNNER_TOOL_CACHE environment variable to be defined.')
-  }
+  const { GITHUB_REPOSITORY } = process.env
 
   if (!GITHUB_REPOSITORY) {
     throw new TypeError('Expected GITHUB_REPOSITORY environment variable to be defined.')
   }
-  const cachePath = path.join(RUNNER_TOOL_CACHE, GITHUB_REPOSITORY)
+  const cachePath = path.join('/root/shared-cache', GITHUB_REPOSITORY)
   const primaryCacheKey = path.join(cachePath, key)
   if (!findKey || await exists(primaryCacheKey)) return primaryCacheKey
 
