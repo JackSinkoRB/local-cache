@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import saveImpl from './saveImpl'
 import { StateProvider } from './stateProvider'
 import {Inputs} from "./constants";
+import * as utils from "./utils/actionUtils";
 
 async function run(): Promise<void> {
   await saveImpl(new StateProvider())
@@ -11,11 +12,15 @@ async function run(): Promise<void> {
         const { stdout, stderr } = await execAsync(`rm -rf ${Inputs.Path}`);
 
         // Handle the output if needed
-        console.log('Command Output:', stdout);
-        console.error('Command Error:', stderr);
+        core.info(
+            `Remove library output: ${stdout}`,
+        )
+        core.info(
+            `Remove library error: ${stderr}`,
+        )
     } catch (error) {
         // Handle errors if the command fails
-        console.error('Error running command:', error);
+        utils.logWarning(`Error removing library: ${error}`)
     }
 }
 
