@@ -29,7 +29,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const saveImpl_1 = __importDefault(require("./saveImpl"));
 const stateProvider_1 = require("./stateProvider");
-const constants_1 = require("./constants");
 const exec_1 = require("@actions/exec");
 const utils = __importStar(require("./utils/actionUtils"));
 async function run() {
@@ -42,8 +41,8 @@ async function run() {
 }
 async function removeLibrary() {
     try {
-        core.info('Removing library...');
-        await (0, exec_1.exec)(`rm -rf ${constants_1.Inputs.Path}`);
+        core.info(`Removing folder: ${process.env.GITHUB_WORKSPACE}/Library}`);
+        await (0, exec_1.exec)(`rm -rf ${process.env.GITHUB_WORKSPACE}/Library`);
     }
     catch (error) {
         core.setFailed(error.message);
