@@ -29,11 +29,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const saveImpl_1 = __importDefault(require("./saveImpl"));
 const stateProvider_1 = require("./stateProvider");
+const constants_1 = require("./constants");
+const exec_1 = require("@actions/exec");
+const utils = __importStar(require("./utils/actionUtils"));
 async function run() {
-    await (0, saveImpl_1.default)(new stateProvider_1.StateProvider());
+    try {
+        await (0, saveImpl_1.default)(new stateProvider_1.StateProvider());
+    }
+    catch (error) {
+        core.setFailed(error.message);
+    }
 }
-run()
+async function removeLibrary() {
+    try {
+        core.info('Removing library...');
+        await (0, exec_1.exec)(`rm -rf ${constants_1.Inputs.Path}`);
+    }
+    catch (error) {
+        core.setFailed(error.message);
+    }
+}
+// Use Promise.all to await the completion of both functions
+Promise.all([run(), removeLibrary()])
     .catch((error) => {
-    core.setFailed(error.message);
+    utils.logWarning(error.message);
 });
 exports.default = run;

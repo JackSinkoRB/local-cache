@@ -18,8 +18,7 @@ async function removeLibrary(): Promise<void> {
         core.info('Removing library...');
         await exec(`rm -rf ${Inputs.Path}`);
     } catch (error) {
-        core.info(`Remove library output: ${error}`);
-        throw new Error('Failed to remove library');
+        core.setFailed((error as Error).message);
     }
 }
 
