@@ -3,24 +3,25 @@ import saveImpl from './saveImpl'
 import { StateProvider } from './stateProvider'
 import {Inputs} from "./constants";
 import * as utils from "./utils/actionUtils";
+import { exec } from '@actions/exec';
 
 async function run(): Promise<void> {
   await saveImpl(new StateProvider())
 
-    try {
-        // Run the Linux command after saveImpl
-        const { stdout, stderr } = await execAsync(`rm -rf ${Inputs.Path}`);
+    core.info(
+        'Removing library...',
+    )
+    
+    await removeLibrary()
+}
 
-        // Handle the output if needed
-        core.info(
-            `Remove library output: ${stdout}`,
-        )
-        core.info(
-            `Remove library error: ${stderr}`,
-        )
+async function removeLibrary() {
+    try {
+        await exec(`rm -rf ${Inputs.Path}`);
     } catch (error) {
-        // Handle errors if the command fails
-        utils.logWarning(`Error removing library: ${error}`)
+        core.info(
+            `Remove library output: ${error}`,
+        )
     }
 }
 
