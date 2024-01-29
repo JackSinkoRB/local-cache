@@ -1,33 +1,32 @@
-import * as core from '@actions/core'
-import saveImpl from './saveImpl'
-import { StateProvider } from './stateProvider'
-import {Inputs} from "./constants";
-import * as utils from "./utils/actionUtils";
+import * as core from '@actions/core';
+import saveImpl from './saveImpl';
+import { StateProvider } from './stateProvider';
+import { Inputs } from './constants';
 import { exec } from '@actions/exec';
+import * as utils from './utils/actionUtils';
 
 async function run(): Promise<void> {
-  await saveImpl(new StateProvider())
-
-    core.info(
-        'Removing library...',
-    )
-    
-    await removeLibrary()
-}
-
-async function removeLibrary() {
     try {
-        await exec(`rm -rf ${Inputs.Path}`);
+        await saveImpl(new StateProvider());
     } catch (error) {
-        core.info(
-            `Remove library output: ${error}`,
-        )
+        core.setFailed((error as Error).message);
     }
 }
 
-run()
-  .catch((error: unknown) => {
-    core.setFailed((error as Error).message)
-  })
+async function removeLibrary(): Promise<void> {
+    try {
+        core.info('Removing library...');
+        await exec(`rm -rf ${Inputs.Path}`);
+    } catch (error) {
+        core.info(`Remove library output: ${error}`);
+        throw new Error('Failed to remove library');
+    }
+}
 
-export default run
+// Use Promise.all to await the completion of both functions
+Promise.all([run(), removeLibrary()])
+    .catch((error: unknown) => {
+        utils.logWarning((error as Error).message);
+    });
+
+export default run;
