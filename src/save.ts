@@ -15,7 +15,7 @@ async function run(): Promise<void> {
 
 async function removeLibrary(): Promise<void> {
     try {
-        core.info(`Removing folder: ${process.env.GITHUB_WORKSPACE}/Library}`);
+        core.info(`Removing folder: ${process.env.GITHUB_WORKSPACE}/Library`);
         await exec(`rm -rf ${process.env.GITHUB_WORKSPACE}/Library`);
     } catch (error) {
         core.setFailed((error as Error).message);
