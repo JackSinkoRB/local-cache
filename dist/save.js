@@ -29,28 +29,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const saveImpl_1 = __importDefault(require("./saveImpl"));
 const stateProvider_1 = require("./stateProvider");
-const exec_1 = require("@actions/exec");
-const utils = __importStar(require("./utils/actionUtils"));
 async function run() {
-    try {
-        await (0, saveImpl_1.default)(new stateProvider_1.StateProvider());
-    }
-    catch (error) {
-        core.setFailed(error.message);
-    }
+    await (0, saveImpl_1.default)(new stateProvider_1.StateProvider());
 }
-async function removeLibrary() {
-    try {
-        core.info(`Removing folder: ${process.env.GITHUB_WORKSPACE}/Library}`);
-        await (0, exec_1.exec)(`rm -rf ${process.env.GITHUB_WORKSPACE}/Library`);
-    }
-    catch (error) {
-        core.setFailed(error.message);
-    }
-}
-// Use Promise.all to await the completion of both functions
-Promise.all([run(), removeLibrary()])
+run()
     .catch((error) => {
-    utils.logWarning(error.message);
+    core.setFailed(error.message);
 });
 exports.default = run;
