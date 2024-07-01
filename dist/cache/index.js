@@ -149,7 +149,7 @@ async function saveCache(paths, key) {
         core.debug(`File Size: ${archiveFileSize}`);
         // For GHES, this check will take place in ReserveCache API with enterprise file size limit
         if (archiveFileSize > fileSizeLimit && !utils.isGhes()) {
-            throw new Error(`Cache size of ~${Math.round(archiveFileSize / (1024 * 1024))} MB (${archiveFileSize} B) is over the 10GB limit, not saving cache.`);
+            throw new Error(`Cache size of ~${Math.round(archiveFileSize / (1024 * 1024))} MB (${archiveFileSize} B) is over the 30GB limit, not saving cache.`);
         }
     }
     catch (error) {
