@@ -144,7 +144,7 @@ async function saveCache(paths, key) {
         if (core.isDebug()) {
             await (0, tar_1.listTar)(archivePath, compressionMethod);
         }
-        const fileSizeLimit = 10 * 1024 * 1024 * 1024; // 10GB per repo limit
+        const fileSizeLimit = 30 * 1024 * 1024 * 1024; // 30GB per repo limit
         const archiveFileSize = utils.getArchiveFileSizeInBytes(archivePath);
         core.debug(`File Size: ${archiveFileSize}`);
         // For GHES, this check will take place in ReserveCache API with enterprise file size limit
